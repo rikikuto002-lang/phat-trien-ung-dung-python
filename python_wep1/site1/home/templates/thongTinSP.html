@@ -1,0 +1,1075 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Sản Phẩm - PhoneShop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #f8f9fa;
+            color: #333;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff6b6b;
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 5px;
+        }
+
+        /* Main Container */
+        .product-container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+        }
+
+        /* Product Images */
+        .product-images {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 500px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        .main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .discount-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #ff6b6b;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .thumbnail-gallery {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+        }
+
+        .thumbnail {
+            width: 100%;
+            height: 100px;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            overflow: hidden;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .thumbnail:hover,
+        .thumbnail.active {
+            border-color: #667eea;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Product Info */
+        .product-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .rating-stars {
+            color: #ffc107;
+            display: flex;
+            gap: 4px;
+        }
+
+        .rating-text {
+            color: #666;
+        }
+
+        .sold-count {
+            color: #999;
+            font-size: 13px;
+        }
+
+        /* Price Section */
+        .price-section {
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            margin: 20px 0;
+        }
+
+        .price-row {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .original-price {
+            font-size: 14px;
+            color: #999;
+            text-decoration: line-through;
+        }
+
+        .current-price {
+            font-size: 32px;
+            font-weight: 700;
+            color: #ff6b6b;
+        }
+
+        .discount-percent {
+            background: #fff3cd;
+            color: #856404;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Highlights */
+        .highlights {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f0f2f5;
+            border-radius: 8px;
+        }
+
+        .highlights h3 {
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+
+        .highlights-list {
+            list-style: none;
+        }
+
+        .highlights-list li {
+            padding: 8px 0;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .highlights-list li:before {
+            content: '✓';
+            color: #28a745;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        /* Options */
+        .options-section {
+            margin: 30px 0;
+        }
+
+        .option-group {
+            margin-bottom: 25px;
+        }
+
+        .option-label {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+            display: block;
+            font-size: 14px;
+        }
+
+        .color-options {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .color-option:hover,
+        .color-option.selected {
+            border-color: #667eea;
+        }
+
+        .color-option.selected:after {
+            content: '✓';
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .color-1 { background: #ff69b4; }
+        .color-2 { background: #4169e1; }
+        .color-3 { background: #ffffff; border-color: #999 !important; }
+        .color-4 { background: #000000; }
+        .color-5 { background: #9370db; }
+
+        .quantity-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+        }
+
+        .quantity-control button {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: white;
+            cursor: pointer;
+            font-size: 18px;
+            color: #667eea;
+            transition: background 0.3s;
+        }
+
+        .quantity-control button:hover {
+            background: #f0f2f5;
+        }
+
+        .quantity-input {
+            width: 50px;
+            height: 40px;
+            border: none;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .stock-info {
+            color: #666;
+            font-size: 13px;
+        }
+
+        /* Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin: 30px 0;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            border: 2px solid #ddd;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            border-color: #667eea;
+            color: #667eea;
+        }
+
+        /* Share */
+        .share-section {
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .share-text {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .share-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .share-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s;
+            color: #667eea;
+        }
+
+        .share-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* Description */
+        .description-section {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 2px solid #eee;
+        }
+
+        .description-tabs {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #eee;
+        }
+
+        .tab-button {
+            padding: 15px 0;
+            border: none;
+            background: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #999;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+            bottom: -2px;
+        }
+
+        .tab-button.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .description-text {
+            color: #666;
+            line-height: 1.8;
+            font-size: 15px;
+            margin-bottom: 20px;
+        }
+
+        /* Related Products */
+        .related-products {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 2px solid #eee;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            color: #1a1a1a;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: #f0f2f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff6b6b;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .product-details {
+            padding: 15px;
+        }
+
+        .product-name {
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+            font-size: 14px;
+            line-height: 1.4;
+            min-height: 28px;
+        }
+
+        .product-price {
+            color: #ff6b6b;
+            font-weight: 700;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .product-rating {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 40px 20px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: block;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #667eea;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .product-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .product-images {
+                width: 100%;
+            }
+
+            .main-image {
+                height: 350px;
+            }
+
+            .thumbnail-gallery {
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .description-tabs {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .tab-button {
+                border-bottom: 1px solid #eee;
+                padding: 12px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .product-title {
+                font-size: 20px;
+            }
+
+            .current-price {
+                font-size: 24px;
+            }
+
+            .products-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .share-section {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <div class="logo">🛍️ PhoneShop</div>
+            <nav class="nav-links">
+                <a href="/">Trang chủ</a>
+                <a href="/shop">Cửa hàng</a>
+                <a href="/about">Về chúng tôi</a>
+                <a href="/contact">Liên hệ</a>
+                <div class="cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-count">3</span>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="/">Trang chủ</a> / <a href="/shop">Phụ kiện</a> / <span>Ốp lưng iPhone 14 Pro Max</span>
+    </div>
+
+    <!-- Main Product -->
+    <div class="product-container">
+        <!-- Product Images -->
+        <div class="product-images">
+            <div class="main-image">
+                <img id="mainImage" src="https://images.unsplash.com/photo-1722535016237-eb3b2ad2a3d2?w=800&h=800&fit=crop" alt="Ốp lưng iPhone 14 Pro Max">
+                <div class="discount-badge">-50%</div>
+            </div>
+            <div class="thumbnail-gallery">
+                <div class="thumbnail active" onclick="changeImage(this)">
+                    <img src="https://images.unsplash.com/photo-1722535016237-eb3b2ad2a3d2?w=100&h=100&fit=crop" alt="">
+                </div>
+                <div class="thumbnail" onclick="changeImage(this)">
+                    <img src="https://images.unsplash.com/photo-1726763581169-e7643070cf64?w=100&h=100&fit=crop" alt="">
+                </div>
+                <div class="thumbnail" onclick="changeImage(this)">
+                    <img src="https://images.unsplash.com/photo-1569163139394-de4798aa62b1?w=100&h=100&fit=crop" alt="">
+                </div>
+                <div class="thumbnail" onclick="changeImage(this)">
+                    <img src="https://images.unsplash.com/photo-1618291063344-fedd4e1f69c3?w=100&h=100&fit=crop" alt="">
+                </div>
+                <div class="thumbnail" onclick="changeImage(this)">
+                    <img src="https://images.unsplash.com/photo-1722535016237-eb3b2ad2a3d2?w=100&h=100&fit=crop" alt="">
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="product-info">
+            <h1 class="product-title">Ốp lưng iPhone 14 Pro Max Silicon Mềm Cao Cấp</h1>
+
+            <div class="rating">
+                <div class="rating-stars">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+                <span>4.8</span>
+                <span class="sold-count">(2,345 đánh giá • Đã bán 15,600)</span>
+            </div>
+
+            <!-- Price -->
+            <div class="price-section">
+                <div class="price-row">
+                    <span class="original-price">₫179,000</span>
+                    <span class="current-price">₫89,000</span>
+                    <span class="discount-percent">Tiết kiệm -50%</span>
+                </div>
+            </div>
+
+            <!-- Highlights -->
+            <div class="highlights">
+                <h3>Đặc điểm nổi bật:</h3>
+                <ul class="highlights-list">
+                    <li>Chất liệu silicon mềm cao cấp</li>
+                    <li>Chống sốc, chống va đập</li>
+                    <li>Bo viền camera bảo vệ tối ưu</li>
+                    <li>Siêu mỏng, vừa vặn với máy</li>
+                    <li>Dễ dàng tháo lắp</li>
+                </ul>
+            </div>
+
+            <!-- Options -->
+            <div class="options-section">
+                <div class="option-group">
+                    <label class="option-label">Màu Sắc</label>
+                    <div class="color-options">
+                        <div class="color-option color-1 selected" title="Hồng" onclick="selectColor(this)"></div>
+                        <div class="color-option color-2" title="Xanh Dương" onclick="selectColor(this)"></div>
+                        <div class="color-option color-3" title="Trắng" onclick="selectColor(this)"></div>
+                        <div class="color-option color-4" title="Đen" onclick="selectColor(this)"></div>
+                        <div class="color-option color-5" title="Tím" onclick="selectColor(this)"></div>
+                    </div>
+                </div>
+
+                <div class="option-group">
+                    <label class="option-label">Số Lượng</label>
+                    <div class="quantity-section">
+                        <div class="quantity-control">
+                            <button onclick="decreaseQty()">−</button>
+                            <input type="number" class="quantity-input" id="quantity" value="1" min="1">
+                            <button onclick="increaseQty()">+</button>
+                        </div>
+                        <span class="stock-info">Còn hàng: 999+ sản phẩm</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn-secondary">
+                    <i class="fas fa-heart"></i> Yêu Thích
+                </button>
+                <button class="btn-primary">
+                    <i class="fas fa-shopping-cart"></i> Thêm Vào Giỏ Hàng
+                </button>
+                <button class="btn-primary">Mua Ngay</button>
+            </div>
+
+            <!-- Share -->
+            <div class="share-section">
+                <span class="share-text">Chia sẻ sản phẩm:</span>
+                <div class="share-buttons">
+                    <button class="share-btn" title="Facebook">
+                        <i class="fab fa-facebook"></i>
+                    </button>
+                    <button class="share-btn" title="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </button>
+                    <button class="share-btn" title="Pinterest">
+                        <i class="fab fa-pinterest"></i>
+                    </button>
+                    <button class="share-btn" title="Copy link">
+                        <i class="fas fa-link"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Description & Reviews -->
+    <div class="product-container" style="margin-top: 0;">
+        <div style="grid-column: 1 / -1;">
+            <div class="description-section">
+                <div class="description-tabs">
+                    <button class="tab-button active" onclick="switchTab(event, 'description')">
+                        Mô tả sản phẩm
+                    </button>
+                    <button class="tab-button" onclick="switchTab(event, 'reviews')">
+                        Đánh giá (2,345)
+                    </button>
+                    <button class="tab-button" onclick="switchTab(event, 'shipping')">
+                        Vận chuyển & Đổi trả
+                    </button>
+                </div>
+
+                <div id="description" class="tab-content active">
+                    <p class="description-text">
+                        Ốp lưng iPhone 14 Pro Max Silicon Mềm Cao Cấp là giải pháp bảo vệ hoàn hảo cho chiếc điện thoại yêu quý của bạn. Được thiết kế với chất liệu silicon mềm cao cấp, sản phẩm mang lại cảm giác cầm nắm thoải mái và chống trượt hiệu quả.
+                    </p>
+                    <p class="description-text">
+                        Với thiết kế bo viền camera nổi, ốp lưng bảo vệ toàn diện cho cụm camera, tránh trầy xước khi đặt máy xuống bề mặt. Các góc cạnh được gia cố để tăng khả năng chống sốc, bảo vệ máy khi rơi hoặc va đập.
+                    </p>
+                    <p class="description-text">
+                        Sản phẩm có độ mỏng chỉ 1.5mm, vừa vặn hoàn hảo với máy mà không làm tăng trọng lượng hay kích thước. Dễ dàng tháo lắp mà không lo làm trầy máy. Với 5 lựa chọn màu sắc tuyệt đẹp, bạn có thể chọn chiếc ốp phù hợp với phong cách cá nhân của mình.
+                    </p>
+                    <p class="description-text">
+                        Được nhập khẩu từ các nhà sản xuất uy tín, sản phẩm đã qua kiểm định chất lượng nghiêm ngặt. Chúng tôi cam kết cung cấp sản phẩm chính hãng, chất lượng cao với giá cả cạnh tranh nhất trên thị trường.
+                    </p>
+                </div>
+
+                <div id="reviews" class="tab-content">
+                    <p class="description-text">
+                        Khách hàng của chúng tôi rất hài lòng với chất lượng sản phẩm. Trung bình đánh giá 4.8 sao từ hơn 2,300 đánh giá, cho thấy độ tin cậy và chất lượng của ốp lưng này. Nhiều khách hàng nhấn mạnh về sự bền bỉ, thiết kế đẹp mắt và giá cả phải chăng.
+                    </p>
+                </div>
+
+                <div id="shipping" class="tab-content">
+                    <p class="description-text">
+                        <strong>Vận chuyển:</strong> Chúng tôi hỗ trợ vận chuyển toàn quốc với nhiều hình thức thanh toán linh hoạt. Đơn hàng được gửi trong 1-2 ngày làm việc, với thời gian giao hàng trung bình từ 3-5 ngày.
+                    </p>
+                    <p class="description-text">
+                        <strong>Đổi trả:</strong> Nếu sản phẩm bị lỗi hoặc không đúng mô tả, bạn có thể đổi trả trong vòng 30 ngày từ ngày nhận hàng. Chúng tôi sẽ chịu toàn bộ chi phí vận chuyển cho việc đổi trả.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    <div class="product-container" style="margin-top: 0;">
+        <div style="grid-column: 1 / -1;">
+            <div class="related-products">
+                <h2 class="section-title">Sản Phẩm Liên Quan</h2>
+                <div class="products-grid">
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1726763581169-e7643070cf64?w=300&h=300&fit=crop" alt="">
+                            <div class="product-badge">-30%</div>
+                        </div>
+                        <div class="product-details">
+                            <div class="product-name">Dán kính cường lực iPhone 14 Pro Max</div>
+                            <div class="product-price">₫59,000</div>
+                            <div class="product-rating">⭐ 4.7 (1,245)</div>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1731616103600-3fe7ccdc5a59?w=300&h=300&fit=crop" alt="">
+                            <div class="product-badge">-25%</div>
+                        </div>
+                        <div class="product-details">
+                            <div class="product-name">Sạc nhanh Type-C 45W</div>
+                            <div class="product-price">₫249,000</div>
+                            <div class="product-rating">⭐ 4.8 (2,103)</div>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=300&h=300&fit=crop" alt="">
+                        </div>
+                        <div class="product-details">
+                            <div class="product-name">Tai nghe không dây Bluetooth</div>
+                            <div class="product-price">₫349,000</div>
+                            <div class="product-rating">⭐ 4.6 (892)</div>
+                        </div>
+                    </div>
+
+                    <div class="product-card">
+                        <div class="product-image">
+                            <img src="https://images.unsplash.com/photo-1618291063344-fedd4e1f69c3?w=300&h=300&fit=crop" alt="">
+                            <div class="product-badge">-15%</div>
+                        </div>
+                        <div class="product-details">
+                            <div class="product-name">Cáp sạc lightning 3M chính hãng</div>
+                            <div class="product-price">₫79,000</div>
+                            <div class="product-rating">⭐ 4.9 (3,456)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Về PhoneShop</h4>
+                <ul>
+                    <li><a href="#">Về chúng tôi</a></li>
+                    <li><a href="#">Tuyên bố bảo mật</a></li>
+                    <li><a href="#">Điều khoản sử dụng</a></li>
+                    <li><a href="#">Chính sách bán hàng</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Hỗ trợ khách hàng</h4>
+                <ul>
+                    <li><a href="#">Liên hệ chúng tôi</a></li>
+                    <li><a href="#">Hướng dẫn mua hàng</a></li>
+                    <li><a href="#">Vận chuyển & Đổi trả</a></li>
+                    <li><a href="#">Câu hỏi thường gặp</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Theo dõi chúng tôi</h4>
+                <ul>
+                    <li><a href="#">Facebook</a></li>
+                    <li><a href="#">Instagram</a></li>
+                    <li><a href="#">Twitter</a></li>
+                    <li><a href="#">YouTube</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Thông tin liên hệ</h4>
+                <ul>
+                    <li><a href="#">📞 1900-1234</a></li>
+                    <li><a href="#">📧 support@phoneshop.vn</a></li>
+                    <li><a href="#">📍 123 Đường ABC, TP HCM</a></li>
+                    <li><a href="#">🕒 T2-T7: 9AM - 9PM</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 PhoneShop. Chất lượng - Uy tín - Giá tốt</p>
+        </div>
+    </footer>
+
+    <script>
+        function changeImage(element) {
+            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+            element.classList.add('active');
+            const imgSrc = element.querySelector('img').src.replace('w=100&h=100', 'w=800&h=800');
+            document.getElementById('mainImage').src = imgSrc;
+        }
+
+        function selectColor(element) {
+            document.querySelectorAll('.color-option').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+
+        function increaseQty() {
+            const qty = document.getElementById('quantity');
+            qty.value = parseInt(qty.value) + 1;
+        }
+
+        function decreaseQty() {
+            const qty = document.getElementById('quantity');
+            if (qty.value > 1) qty.value = parseInt(qty.value) - 1;
+        }
+
+        function switchTab(event, tabName) {
+            event.preventDefault();
+            
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Add to cart
+        document.querySelectorAll('.btn-primary').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (this.textContent.includes('Thêm Vào')) {
+                    const cartCount = document.querySelector('.cart-count');
+                    cartCount.textContent = parseInt(cartCount.textContent) + parseInt(document.getElementById('quantity').value);
+                    // Redirect to cart page
+                    window.location.href = '/gioHang/';
+                } else if (this.textContent.includes('Mua Ngay')) {
+                    window.location.href = '/gioHang/';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

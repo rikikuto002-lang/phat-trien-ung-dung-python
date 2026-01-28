@@ -1,0 +1,397 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký - PhoneShop</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .signup-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            max-width: 420px;
+            width: 100%;
+        }
+
+        .signup-header {
+            padding: 40px 30px;
+            text-align: center;
+            background: white;
+        }
+
+        .logo {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .tagline {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .greeting {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .greeting-text {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 30px;
+        }
+
+        .signup-form {
+            padding: 0 30px 40px;
+        }
+
+        .social-signup {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            color: #333;
+        }
+
+        .social-btn.google {
+            border: 1px solid #ddd;
+            background: white;
+        }
+
+        .social-btn.google:hover {
+            border-color: #4285F4;
+            background: #f8f9ff;
+            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.2);
+        }
+
+        .social-btn.facebook {
+            border: 1px solid #ddd;
+            background: white;
+        }
+
+        .social-btn.facebook:hover {
+            border-color: #1877F2;
+            background: #f0f2f5;
+            box-shadow: 0 2px 8px rgba(24, 119, 242, 0.2);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #ddd;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 8px;
+            position: relative;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1a1a1a;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .form-row .form-group {
+            margin-bottom: 15px;
+        }
+
+        .password-info {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+
+        .terms-checkbox input {
+            margin-top: 3px;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        .terms-checkbox label {
+            margin: 0;
+            font-weight: 400;
+            color: #666;
+        }
+
+        .terms-checkbox a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .terms-checkbox a:hover {
+            color: #764ba2;
+        }
+
+        .signup-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .signup-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-section {
+            text-align: center;
+            padding: 20px 30px;
+            border-top: 1px solid #f0f0f0;
+            background: #f8f9fa;
+        }
+
+        .login-text {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .login-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+
+        .login-link:hover {
+            color: #764ba2;
+        }
+
+        .terms {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            padding: 15px 30px;
+            line-height: 1.6;
+        }
+
+        .terms a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .terms a:hover {
+            color: #764ba2;
+        }
+
+        @media (max-width: 480px) {
+            .signup-container {
+                border-radius: 0;
+            }
+
+            .signup-header {
+                padding: 30px 20px;
+            }
+
+            .signup-form {
+                padding: 0 20px 30px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .login-section {
+                padding: 15px 20px;
+            }
+
+            .terms {
+                padding: 10px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <!-- Header -->
+        <div class="signup-header">
+            <div class="logo">🛍️</div>
+            <div class="logo-text">PhoneShop</div>
+            <div class="tagline">Phụ kiện chính hãng</div>
+            <div class="greeting">Tạo tài khoản ngay!</div>
+            <div class="greeting-text">Bắt đầu mua sắm với nhiều ưu đãi</div>
+        </div>
+
+        <!-- Form -->
+        <div class="signup-form">
+            <!-- Social Signup -->
+            <div class="social-signup">
+                <a href="/auth/google/signup/" class="social-btn google">
+                    <span>🔵</span> Google
+                </a>
+                <a href="/auth/facebook/signup/" class="social-btn facebook">
+                    <span>📘</span> Facebook
+                </a>
+            </div>
+
+            <div class="divider">
+                <span>Hoặc Email</span>
+            </div>
+
+            <!-- Signup Form -->
+            <form method="POST" action="/signup/">
+                {% csrf_token %}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Họ</label>
+                        <input type="text" name="first_name" placeholder="Họ của bạn" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tên</label>
+                        <input type="text" name="last_name" placeholder="Tên của bạn" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email" placeholder="your@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Số điện thoại</label>
+                    <input type="tel" name="phone" placeholder="0123456789" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Mật khẩu</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                    <div class="password-info">Tối thiểu 8 ký tự, bao gồm chữ hoa và số</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Xác nhận mật khẩu</label>
+                    <input type="password" placeholder="••••••••" required>
+                </div>
+
+                <div class="terms-checkbox">
+                    <input type="checkbox" id="terms" required>
+                    <label for="terms">
+                        Tôi đồng ý với <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách bảo mật</a>
+                    </label>
+                </div>
+
+                <button type="submit" class="signup-btn">Đăng Ký</button>
+            </form>
+        </div>
+
+        <!-- Login Section -->
+        <div class="login-section">
+            <div class="login-text">Đã có tài khoản?</div>
+            <a href="/login" class="login-link">Đăng nhập ngay</a>
+        </div>
+
+        <!-- Terms -->
+        <div class="terms">
+            Bằng việc đăng ký, bạn đồng ý với <a href="#">Điều khoản dịch vụ</a> và <a href="#">Chính sách bảo mật</a>
+        </div>
+    </div>
+</body>
+</html>

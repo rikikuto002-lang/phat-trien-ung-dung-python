@@ -1,0 +1,956 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán - PhoneShop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        /* Steps */
+        .steps {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #999;
+        }
+
+        .step.active {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #e8e8e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .step.active .step-number {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Main Container */
+        .checkout-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 30px;
+        }
+
+        /* Form Sections */
+        .form-section {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title i {
+            font-size: 18px;
+            color: #667eea;
+        }
+
+        /* User Info Form */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-row.full {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-group input::placeholder {
+            color: #999;
+        }
+
+        /* Delivery Options */
+        .delivery-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .delivery-option {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .delivery-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .delivery-option input[type="radio"] {
+            margin-right: 12px;
+            cursor: pointer;
+        }
+
+        .delivery-option.selected {
+            background: #f0f2f5;
+            border-color: #667eea;
+        }
+
+        .delivery-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .delivery-price {
+            font-size: 13px;
+            color: #999;
+            margin-left: auto;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .payment-method {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-method:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .payment-method input[type="radio"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .payment-method.selected {
+            background: #f0f2f5;
+            border-color: #667eea;
+        }
+
+        .payment-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        /* Discount Section */
+        .discount-section {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .discount-input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .discount-btn {
+            padding: 12px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .discount-btn:hover {
+            background: #764ba2;
+        }
+
+        .available-codes {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 12px;
+        }
+
+        .available-codes-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .code-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            background: white;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .code-item:hover {
+            background: #f0f2f5;
+        }
+
+        .code-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .code-value {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* Summary */
+        .order-summary {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+            position: sticky;
+            top: 80px;
+        }
+
+        .summary-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: #1a1a1a;
+        }
+
+        .summary-item {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-item-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #f5f5f5;
+            flex-shrink: 0;
+        }
+
+        .summary-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .summary-item-info {
+            flex: 1;
+            font-size: 13px;
+        }
+
+        .summary-item-name {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .summary-item-meta {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .summary-item-price {
+            font-weight: 600;
+            color: #ff6b6b;
+            text-align: right;
+            margin-top: 4px;
+        }
+
+        .summary-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e8e8e8;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .summary-row.total {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+            border-top: 1px solid #e8e8e8;
+            padding-top: 12px;
+            margin-top: 12px;
+        }
+
+        .summary-row.total .price {
+            color: #ff6b6b;
+        }
+
+        .summary-row.discount {
+            color: #27ae60;
+        }
+
+        .summary-row.discount .price {
+            color: #27ae60;
+        }
+
+        /* Buttons */
+        .checkout-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 20px;
+            transition: all 0.3s;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .checkout-btn:disabled {
+            background: #ddd;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .terms {
+            font-size: 12px;
+            color: #999;
+            text-align: center;
+            margin-top: 12px;
+            line-height: 1.5;
+        }
+
+        .terms a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 40px 20px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: block;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #667eea;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .checkout-container {
+                grid-template-columns: 1fr;
+            }
+
+            .order-summary {
+                position: relative;
+                top: 0;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                flex-wrap: wrap;
+                gap: 20px;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .payment-methods {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">🛍️ PhoneShop</a>
+            <nav class="nav-links">
+                <a href="/">Trang chủ</a>
+                <a href="/gioHang">Giỏ hàng</a>
+                <a href="/thanhToan">Thanh toán</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="/">Trang chủ</a> / <a href="/gioHang">Giỏ hàng</a> / <span>Thanh toán</span>
+    </div>
+
+    <!-- Steps -->
+    <div class="steps">
+        <div class="step">
+            <div class="step-number">1</div>
+            <span>Giỏ hàng</span>
+        </div>
+        <div class="step active">
+            <div class="step-number">2</div>
+            <span>Thanh toán</span>
+        </div>
+        <div class="step">
+            <div class="step-number">3</div>
+            <span>Hoàn tất</span>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="checkout-container">
+        <!-- Left Column -->
+        <div>
+            <!-- Delivery Info -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-map-marker-alt"></i> Địa chỉ nhận hàng
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Họ và tên *</label>
+                        <input type="text" placeholder="Nhập họ và tên" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Số điện thoại *</label>
+                        <input type="tel" placeholder="Nhập số điện thoại" required>
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Email *</label>
+                        <input type="email" placeholder="Nhập email" required>
+                    </div>
+                </div>
+                <div class="form-row full">
+                    <div class="form-group">
+                        <label>Địa chỉ cụ thể *</label>
+                        <input type="text" placeholder="Nhập địa chỉ (đường phố, số nhà, tòa nhà...)" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Quận/Huyện *</label>
+                        <select required>
+                            <option value="">Chọn quận/huyện</option>
+                            <option value="q1">Quận 1</option>
+                            <option value="q2">Quận 2</option>
+                            <option value="q3">Quận 3</option>
+                            <option value="q4">Quận 4</option>
+                            <option value="q5">Quận 5</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tỉnh/Thành phố *</label>
+                        <select required>
+                            <option value="">Chọn tỉnh/thành phố</option>
+                            <option value="hcm">TP. Hồ Chí Minh</option>
+                            <option value="hn">Hà Nội</option>
+                            <option value="dn">Đà Nẵng</option>
+                            <option value="hp">Hải Phòng</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Delivery Method -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-truck"></i> Phương thức vận chuyển
+                </div>
+                <div class="delivery-options">
+                    <label class="delivery-option selected">
+                        <input type="radio" name="delivery" value="standard" checked>
+                        <span class="delivery-label">Giao hàng tiêu chuẩn</span>
+                        <span class="delivery-price">30.000 ₫</span>
+                    </label>
+                    <label class="delivery-option">
+                        <input type="radio" name="delivery" value="express">
+                        <span class="delivery-label">Giao hàng nhanh (2-3 giờ)</span>
+                        <span class="delivery-price">60.000 ₫</span>
+                    </label>
+                    <label class="delivery-option">
+                        <input type="radio" name="delivery" value="same-day">
+                        <span class="delivery-label">Giao cùng ngày</span>
+                        <span class="delivery-price">100.000 ₫</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Payment Method -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-credit-card"></i> Phương thức thanh toán
+                </div>
+                <div class="payment-methods">
+                    <label class="payment-method selected">
+                        <input type="radio" name="payment" value="cod" checked>
+                        <span class="payment-label">💵 Thanh toán khi nhận hàng</span>
+                    </label>
+                    <label class="payment-method">
+                        <input type="radio" name="payment" value="bank">
+                        <span class="payment-label">🏦 Chuyển khoản ngân hàng</span>
+                    </label>
+                    <label class="payment-method">
+                        <input type="radio" name="payment" value="ewallet">
+                        <span class="payment-label">📱 Ví điện tử (MoMo)</span>
+                    </label>
+                    <label class="payment-method">
+                        <input type="radio" name="payment" value="card">
+                        <span class="payment-label">💳 Thẻ tín dụng/Ghi nợ</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Discount Code -->
+            <div class="form-section">
+                <div class="section-title">
+                    <i class="fas fa-tag"></i> Mã giảm giá
+                </div>
+                <div class="discount-section">
+                    <input type="text" class="discount-input" id="couponCode" placeholder="Nhập mã giảm giá">
+                    <button class="discount-btn" onclick="applyCoupon()">Áp dụng</button>
+                </div>
+                <div class="available-codes">
+                    <div class="available-codes-title">✨ Mã khả dụng:</div>
+                    <div class="code-item" onclick="useCoupon('FREESHIP')">
+                        <div>
+                            <div class="code-name">FREESHIP</div>
+                            <div class="code-value">Miễn phí ship</div>
+                        </div>
+                    </div>
+                    <div class="code-item" onclick="useCoupon('SALE50K')">
+                        <div>
+                            <div class="code-name">SALE50K</div>
+                            <div class="code-value">Giảm 50.000₫</div>
+                        </div>
+                    </div>
+                    <div class="code-item" onclick="useCoupon('SUMMER20')">
+                        <div>
+                            <div class="code-name">SUMMER20</div>
+                            <div class="code-value">Giảm 20%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column - Summary -->
+        <div class="order-summary">
+            <div class="summary-title">Sản phẩm đã chọn</div>
+
+            <!-- Product 1 -->
+            <div class="summary-item">
+                <div class="summary-item-image">
+                    <img src="https://images.unsplash.com/photo-1722535016237-eb3b2ad2a3d2?w=100&h=100&fit=crop" alt="">
+                </div>
+                <div class="summary-item-info">
+                    <div class="summary-item-name">Ốp lưng iPhone 14 Pro Max</div>
+                    <div class="summary-item-meta">Màu đen, Silicon</div>
+                    <div class="summary-item-price">150.000₫ × 1</div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="summary-item">
+                <div class="summary-item-image">
+                    <img src="https://images.unsplash.com/photo-1731616103600-3fe7ccdc5a59?w=100&h=100&fit=crop" alt="">
+                </div>
+                <div class="summary-item-info">
+                    <div class="summary-item-name">Cáp sạc nhanh Type-C 20W</div>
+                    <div class="summary-item-meta">Dài 1m, Màu trắng</div>
+                    <div class="summary-item-price">89.000₫ × 2</div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="summary-item">
+                <div class="summary-item-image">
+                    <img src="https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=100&h=100&fit=crop" alt="">
+                </div>
+                <div class="summary-item-info">
+                    <div class="summary-item-name">Tai nghe Bluetooth TWS</div>
+                    <div class="summary-item-meta">Màu đen</div>
+                    <div class="summary-item-price">299.000₫ × 1</div>
+                </div>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="summary-section">
+                <div class="summary-row">
+                    <span>Tạm tính:</span>
+                    <span id="subtotal">627.000₫</span>
+                </div>
+                <div class="summary-row">
+                    <span>Phí vận chuyển:</span>
+                    <span id="shipping">30.000₫</span>
+                </div>
+                <div class="summary-row discount" id="discountRow" style="display: none;">
+                    <span id="discountLabel">Mã giảm giá:</span>
+                    <span id="discountAmount">−0₫</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Tổng cộng:</span>
+                    <span class="price" id="total">657.000₫</span>
+                </div>
+            </div>
+
+            <button class="checkout-btn" onclick="placeOrder()">Đặt Hàng</button>
+            <div class="terms">
+                Nhấn "Đặt hàng" đồng nghĩa với việc bạn đồng ý tuân theo <a href="#">Điều khoản PhoneShop</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Về PhoneShop</h4>
+                <ul>
+                    <li><a href="#">Về chúng tôi</a></li>
+                    <li><a href="#">Tuyên bố bảo mật</a></li>
+                    <li><a href="#">Điều khoản sử dụng</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Hỗ Trợ</h4>
+                <ul>
+                    <li><a href="#">Liên hệ chúng tôi</a></li>
+                    <li><a href="#">Chính sách đổi trả</a></li>
+                    <li><a href="#">Hướng dẫn mua hàng</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Danh Mục</h4>
+                <ul>
+                    <li><a href="#">Tai nghe</a></li>
+                    <li><a href="#">Ốp lưng</a></li>
+                    <li><a href="#">Cáp sạc</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Liên Hệ</h4>
+                <ul>
+                    <li><a href="#">📞 1900-1234</a></li>
+                    <li><a href="#">📧 support@phoneshop.vn</a></li>
+                    <li><a href="#">📍 123 Đường ABC, TP HCM</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 PhoneShop. Chất lượng - Uy tín - Giá tốt</p>
+        </div>
+    </footer>
+
+    <script>
+        const subtotal = 627000;
+        let shippingFee = 30000;
+        let discountAmount = 0;
+        let appliedCoupon = null;
+
+        const coupons = {
+            'FREESHIP': { type: 'shipping', value: 30000, label: 'Miễn phí vận chuyển' },
+            'SALE50K': { type: 'amount', value: 50000, label: 'Giảm 50.000₫' },
+            'SUMMER20': { type: 'percent', value: 20, label: 'Giảm 20%' }
+        };
+
+        function updateTotal() {
+            const total = subtotal + shippingFee - discountAmount;
+            document.getElementById('subtotal').textContent = subtotal.toLocaleString('vi-VN') + '₫';
+            document.getElementById('shipping').textContent = shippingFee.toLocaleString('vi-VN') + '₫';
+            document.getElementById('total').textContent = Math.max(0, total).toLocaleString('vi-VN') + '₫';
+        }
+
+        function applyCoupon() {
+            const code = document.getElementById('couponCode').value.toUpperCase().trim();
+            
+            if (!code) {
+                alert('Vui lòng nhập mã giảm giá!');
+                return;
+            }
+
+            useCoupon(code);
+        }
+
+        function useCoupon(code) {
+            if (!coupons[code]) {
+                alert('Mã giảm giá không hợp lệ!');
+                return;
+            }
+
+            appliedCoupon = code;
+            const coupon = coupons[code];
+            document.getElementById('couponCode').value = code;
+
+            discountAmount = 0;
+            if (coupon.type === 'shipping') {
+                shippingFee = 0;
+            } else if (coupon.type === 'amount') {
+                discountAmount = coupon.value;
+            } else if (coupon.type === 'percent') {
+                discountAmount = Math.floor(subtotal * coupon.value / 100);
+            }
+
+            document.getElementById('discountRow').style.display = 'flex';
+            document.getElementById('discountLabel').textContent = coupon.label + ':';
+            document.getElementById('discountAmount').textContent = '−' + (discountAmount + (shippingFee === 0 ? 30000 : 0)).toLocaleString('vi-VN') + '₫';
+
+            updateTotal();
+            alert('Áp dụng mã giảm giá thành công!');
+        }
+
+        // Delivery method change
+        document.querySelectorAll('input[name="delivery"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const fees = { 'standard': 30000, 'express': 60000, 'same-day': 100000 };
+                if (appliedCoupon !== 'FREESHIP') {
+                    shippingFee = fees[this.value];
+                }
+                updateTotal();
+
+                document.querySelectorAll('.delivery-option').forEach(opt => opt.classList.remove('selected'));
+                this.parentElement.classList.add('selected');
+            });
+        });
+
+        // Payment method change
+        document.querySelectorAll('input[name="payment"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.querySelectorAll('.payment-method').forEach(opt => opt.classList.remove('selected'));
+                this.parentElement.classList.add('selected');
+            });
+        });
+
+        function placeOrder() {
+            const name = document.querySelector('input[placeholder*="Họ"]').value;
+            const phone = document.querySelector('input[placeholder*="Số điện thoại"]').value;
+            const email = document.querySelector('input[placeholder*="Email"]').value;
+            const address = document.querySelector('input[placeholder*="Địa chỉ"]').value;
+
+            if (!name || !phone || !email || !address) {
+                alert('Vui lòng điền đầy đủ thông tin người nhận hàng!');
+                return;
+            }
+
+            const total = (subtotal + shippingFee - discountAmount).toLocaleString('vi-VN');
+            alert(`✅ Đặt hàng thành công!\n\nTổng tiền: ${total}₫\n\nCảm ơn bạn đã mua sắm tại PhoneShop!`);
+            // window.location.href = '/success/';
+        }
+
+        updateTotal();
+    </script>
+</body>
+</html>

@@ -1,0 +1,654 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ Hàng - PhoneShop</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #667eea;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .breadcrumb a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        /* Main Container */
+        .cart-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 20px;
+        }
+
+        /* Cart Items */
+        .cart-items {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+        }
+
+        .cart-header {
+            background: #f5f5f5;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .checkbox-all {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .cart-item {
+            padding: 16px;
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            gap: 12px;
+            transition: background 0.2s;
+        }
+
+        .cart-item:hover {
+            background: #fafafa;
+        }
+
+        .item-checkbox {
+            width: 18px;
+            height: 18px;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+
+        .item-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: #f5f5f5;
+            flex-shrink: 0;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .item-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .item-option {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .item-price-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .item-original-price {
+            font-size: 12px;
+            color: #999;
+            text-decoration: line-through;
+        }
+
+        .item-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ff6b6b;
+        }
+
+        .item-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+        }
+
+        .quantity-btn {
+            width: 28px;
+            height: 28px;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 2px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .quantity-btn:hover {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+
+        .quantity-input {
+            width: 40px;
+            height: 28px;
+            border: 1px solid #ddd;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 2px;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 4px 8px;
+            transition: color 0.2s;
+        }
+
+        .delete-btn:hover {
+            color: #ff6b6b;
+        }
+
+        /* Empty Cart */
+        .empty-cart {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .empty-text {
+            font-size: 16px;
+            color: #999;
+            margin-bottom: 30px;
+        }
+
+        .continue-shopping-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+
+        .continue-shopping-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Summary */
+        .cart-summary {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+            padding: 16px;
+            height: fit-content;
+            position: sticky;
+            top: 80px;
+        }
+
+        .summary-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: #666;
+        }
+
+        .summary-row.total {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1a1a1a;
+            border-top: 1px solid #e8e8e8;
+            padding-top: 12px;
+            margin-top: 12px;
+        }
+
+        .summary-row.total .price {
+            color: #ff6b6b;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 16px;
+            transition: all 0.3s;
+        }
+
+        .checkout-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .checkout-btn:disabled {
+            background: #ddd;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Footer */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 40px 20px;
+            margin-top: 60px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: block;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: #667eea;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #333;
+            padding-top: 20px;
+            text-align: center;
+            color: #999;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .cart-container {
+                grid-template-columns: 1fr;
+            }
+
+            .cart-summary {
+                position: relative;
+                top: 0;
+            }
+
+            .item-image {
+                width: 80px;
+                height: 80px;
+            }
+
+            .cart-header {
+                display: none;
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cart-item {
+                flex-wrap: wrap;
+            }
+
+            .item-controls {
+                margin-left: 0;
+                margin-top: 10px;
+                width: 100%;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="header-content">
+            <a href="/" class="logo">🛍️ PhoneShop</a>
+            <nav class="nav-links">
+                <a href="/">Trang chủ</a>
+                <a href="/shop">Cửa hàng</a>
+                <a href="/gioHang">Giỏ hàng</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="/">Trang chủ</a> / <span>Giỏ hàng</span>
+    </div>
+
+    <!-- Main Container -->
+    <div class="cart-container">
+        <!-- Cart Items -->
+        <div class="cart-items">
+            <div class="cart-header">
+                <input type="checkbox" class="checkbox-all" id="selectAll">
+                <span>Chọn tất cả</span>
+                <span style="margin-left: auto;">Xóa</span>
+            </div>
+
+            <!-- Cart Item 1 -->
+            <div class="cart-item" id="item-1">
+                <input type="checkbox" class="item-checkbox" checked>
+                <div class="item-image">
+                    <img src="https://images.unsplash.com/photo-1722535016237-eb3b2ad2a3d2?w=200&h=200&fit=crop" alt="Ốp lưng iPhone 14 Pro Max">
+                </div>
+                <div class="item-details">
+                    <div class="item-name">Ốp lưng iPhone 14 Pro Max Silicon Mềm Cao Cấp</div>
+                    <div class="item-option">Màu: Hồng | Số lượng: 1</div>
+                    <div class="item-price-section">
+                        <span class="item-original-price">₫179,000</span>
+                        <span class="item-price">₫89,000</span>
+                    </div>
+                </div>
+                <div class="item-controls">
+                    <button class="quantity-btn" onclick="decreaseQty(1)">−</button>
+                    <input type="number" class="quantity-input" value="1" min="1" onchange="updateQty(1, this.value)">
+                    <button class="quantity-btn" onclick="increaseQty(1)">+</button>
+                    <button class="delete-btn" onclick="deleteItem(1)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cart Item 2 -->
+            <div class="cart-item" id="item-2">
+                <input type="checkbox" class="item-checkbox" checked>
+                <div class="item-image">
+                    <img src="https://images.unsplash.com/photo-1726763581169-e7643070cf64?w=200&h=200&fit=crop" alt="Tai nghe Bluetooth">
+                </div>
+                <div class="item-details">
+                    <div class="item-name">Tai nghe Bluetooth TWS Pro chất âm tuyệt hảo</div>
+                    <div class="item-option">Màu: Đen | Số lượng: 1</div>
+                    <div class="item-price-section">
+                        <span class="item-original-price">₫999,000</span>
+                        <span class="item-price">₫599,000</span>
+                    </div>
+                </div>
+                <div class="item-controls">
+                    <button class="quantity-btn" onclick="decreaseQty(2)">−</button>
+                    <input type="number" class="quantity-input" value="1" min="1" onchange="updateQty(2, this.value)">
+                    <button class="quantity-btn" onclick="increaseQty(2)">+</button>
+                    <button class="delete-btn" onclick="deleteItem(2)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Cart Item 3 -->
+            <div class="cart-item" id="item-3">
+                <input type="checkbox" class="item-checkbox" checked>
+                <div class="item-image">
+                    <img src="https://images.unsplash.com/photo-1731616103600-3fe7ccdc5a59?w=200&h=200&fit=crop" alt="Cáp sạc nhanh">
+                </div>
+                <div class="item-details">
+                    <div class="item-name">Cáp sạc nhanh Type-C 100W bền bỉ</div>
+                    <div class="item-option">Dài: 2m | Số lượng: 2</div>
+                    <div class="item-price-section">
+                        <span class="item-original-price">₫299,000</span>
+                        <span class="item-price">₫149,000</span>
+                    </div>
+                </div>
+                <div class="item-controls">
+                    <button class="quantity-btn" onclick="decreaseQty(3)">−</button>
+                    <input type="number" class="quantity-input" value="2" min="1" onchange="updateQty(3, this.value)">
+                    <button class="quantity-btn" onclick="increaseQty(3)">+</button>
+                    <button class="delete-btn" onclick="deleteItem(3)">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cart Summary -->
+        <div class="cart-summary">
+            <div class="summary-title">Tóm Tắt Đơn Hàng</div>
+            <div class="summary-row">
+                <span>Tổng tiền hàng:</span>
+                <span id="subtotal">₫837,000</span>
+            </div>
+            <div class="summary-row">
+                <span>Giảm giá:</span>
+                <span id="discount" style="color: #ff6b6b;">−₫392,000</span>
+            </div>
+            <div class="summary-row">
+                <span>Phí vận chuyển:</span>
+                <span id="shipping">₫0</span>
+            </div>
+            <div class="summary-row total">
+                <span>Thành tiền:</span>
+                <span class="price" id="total">₫445,000</span>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">Tiến Hành Thanh Toán</button>
+            <a href="/" class="continue-shopping-btn" style="display: block; text-align: center; margin-top: 10px;">Tiếp Tục Mua Sắm</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Về PhoneShop</h4>
+                <ul>
+                    <li><a href="#">Về chúng tôi</a></li>
+                    <li><a href="#">Tuyên bố bảo mật</a></li>
+                    <li><a href="#">Điều khoản sử dụng</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Hỗ Trợ</h4>
+                <ul>
+                    <li><a href="#">Liên hệ chúng tôi</a></li>
+                    <li><a href="#">Chính sách đổi trả</a></li>
+                    <li><a href="#">Hướng dẫn mua hàng</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Danh Mục</h4>
+                <ul>
+                    <li><a href="#">Tai nghe</a></li>
+                    <li><a href="#">Ốp lưng</a></li>
+                    <li><a href="#">Cáp sạc</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4>Liên Hệ</h4>
+                <ul>
+                    <li><a href="#">📞 1900-1234</a></li>
+                    <li><a href="#">📧 support@phoneshop.vn</a></li>
+                    <li><a href="#">📍 123 Đường ABC, TP HCM</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 PhoneShop. Chất lượng - Uy tín - Giá tốt</p>
+        </div>
+    </footer>
+
+    <script>
+        function increaseQty(itemId) {
+            const input = document.querySelector(`#item-${itemId} .quantity-input`);
+            input.value = parseInt(input.value) + 1;
+            updateTotal();
+        }
+
+        function decreaseQty(itemId) {
+            const input = document.querySelector(`#item-${itemId} .quantity-input`);
+            if (input.value > 1) {
+                input.value = parseInt(input.value) - 1;
+                updateTotal();
+            }
+        }
+
+        function updateQty(itemId, value) {
+            if (value < 1) {
+                document.querySelector(`#item-${itemId} .quantity-input`).value = 1;
+            }
+            updateTotal();
+        }
+
+        function deleteItem(itemId) {
+            const item = document.getElementById(`item-${itemId}`);
+            item.style.opacity = '0';
+            item.style.transition = 'opacity 0.3s';
+            setTimeout(() => {
+                item.remove();
+                updateTotal();
+            }, 300);
+        }
+
+        function updateTotal() {
+            const items = document.querySelectorAll('.cart-item');
+            let subtotal = 0;
+            
+            items.forEach(item => {
+                const priceText = item.querySelector('.item-price').textContent;
+                const price = parseInt(priceText.replace(/[₫\D]/g, '')) || 0;
+                const qty = parseInt(item.querySelector('.quantity-input').value);
+                subtotal += price * qty;
+            });
+
+            const originalPrice = 837000; // Tổng giá gốc
+            const discount = originalPrice - subtotal;
+            
+            document.getElementById('subtotal').textContent = '₫' + subtotal.toLocaleString('vi-VN');
+            document.getElementById('discount').textContent = '−₫' + discount.toLocaleString('vi-VN');
+            document.getElementById('total').textContent = '₫' + subtotal.toLocaleString('vi-VN');
+        }
+
+        document.getElementById('selectAll').addEventListener('change', function() {
+            document.querySelectorAll('.item-checkbox').forEach(cb => {
+                cb.checked = this.checked;
+            });
+        });
+
+        function checkout() {
+            const checkedItems = document.querySelectorAll('.item-checkbox:checked');
+            if (checkedItems.length === 0) {
+                alert('Vui lòng chọn sản phẩm để thanh toán!');
+            } else {
+                window.location.href = '/thanhToan/';
+            }
+        }
+    </script>
+</body>
+</html>
