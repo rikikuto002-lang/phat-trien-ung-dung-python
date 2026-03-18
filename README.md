@@ -1,0 +1,4 @@
+
+Trong kỷ nguyên số hóa hiện nay, thương mại điện tử đã trở thành một phần không thể thiếu của đời sống, thay đổi hoàn toàn thói quen mua sắm của người tiêu dùng. Bên cạnh đó, ngôn ngữ lập trình Python với sự mạnh mẽ, linh hoạt và hệ sinh thái phong phú đang là lựa chọn hàng đầu để phát triển các ứng dụng web hiện đại.
+Vận dụng những kiến thức đã học trong môn Phát triển ứng dụng Python, em đã lựa chọn đề tài: "Xây dựng website bán phụ kiện điện thoại". Đây là một đề tài mang tính thực tiễn cao, giúp em không chỉ củng cố kiến thức về ngôn ngữ Python mà còn rèn luyện tư duy thiết kế hệ thống, quản trị cơ sở dữ liệu và xây dựng quy trình nghiệp vụ bán hàng hoàn chỉnh.
+Bài báo cáo này trình bày chi tiết về quá trình phân tích, thiết kế và xây dựng ứng dụng, từ việc xác định yêu cầu, thiết kế cơ sở dữ liệu đến việc hiện thực hóa các chức năng như quản lý sản phẩm, giỏ hàng và xử lý đơn hàng.
