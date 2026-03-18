@@ -1,0 +1,50 @@
+{% extends "admin_base.html" %}
+{% block title %}Admin - {% if mode == "edit" %}Sửa{% else %}Thêm{% endif %} sản phẩm{% endblock %}
+{% block admin_content %}
+  <div class="card" style="padding:18px;max-width:760px;">
+    <h2 style="margin:0 0 10px;">{% if mode == "edit" %}Sửa{% else %}Thêm{% endif %} sản phẩm</h2>
+
+    {% if form.non_field_errors %}
+      <div class="alert">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" style="display:grid;gap:12px;">
+      {% csrf_token %}
+      <div>
+        <div class="label">Tên sản phẩm</div>
+        {{ form.ten }}
+        {{ form.ten.errors }}
+      </div>
+      <div>
+        <div class="label">Giá (VND)</div>
+        {{ form.gia }}
+        {{ form.gia.errors }}
+      </div>
+      <div>
+        <div class="label">Trạng thái</div>
+        {{ form.trang_thai }}
+        {{ form.trang_thai.errors }}
+      </div>
+      <div>
+        <div class="label">Loại sản phẩm</div>
+        {{ form.loai }}
+        {{ form.loai.errors }}
+      </div>
+      <div>
+        <div class="label">Ảnh</div>
+        {% if sp and sp.anh %}
+          <div class="muted" style="margin-bottom:6px;">Ảnh hiện tại:</div>
+          <img src="{{ sp.anh.url }}" alt="" style="width:120px;height:120px;object-fit:cover;border-radius:16px;border:1px solid var(--line);margin-bottom:8px;">
+        {% endif %}
+        {{ form.anh }}
+        {{ form.anh.errors }}
+        <div class="muted" style="margin-top:6px;">Cho phép JPG/JPEG/PNG/WEBP/GIF, dung lượng tối đa 2MB.</div>
+      </div>
+
+      <div class="row" style="gap:10px;flex-wrap:wrap;">
+        <button class="btn primary" type="submit">Lưu</button>
+        <a class="btn" href="{% url 'admin_sanpham_list' %}">Quay lại</a>
+      </div>
+    </form>
+  </div>
+{% endblock %}

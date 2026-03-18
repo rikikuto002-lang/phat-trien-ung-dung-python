@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load tien %}
+{% block title %}Ví điện tử - Phụ kiện điện thoại{% endblock %}
+{% block content %}
+<h2 style="font-family:'Cormorant Garamond',serif;margin:18px 0 10px;">Ví điện tử</h2>
+
+<div class="split-2">
+  <div class="card" style="padding:16px;">
+    <h3 style="margin-top:0;">Thông tin ví</h3>
+    <div style="font-size:28px;font-weight:700;margin:8px 0 6px;">{{ wallet.balance|vnd }} VND</div>
+    <div class="muted">Số dư khả dụng hiện tại của bạn.</div>
+
+    <form method="post" action="{% url 'wallet_deposit' %}" style="margin-top:16px;">
+      {% csrf_token %}
+      <label for="amount"><b>Nạp tiền vào ví</b></label>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px;">
+        <input class="input" id="amount" name="amount" type="number" min="1000" step="1000" placeholder="Ví dụ: 500000">
+        <button class="btn primary" type="submit">Nạp tiền</button>
+      </div>
+      <div class="muted" style="margin-top:6px;">Demo nội bộ: nạp tiền trực tiếp để test chức năng thanh toán bằng ví.</div>
+    </form>
+  </div>
+
+  <div class="card" style="padding:16px;">
+    <h3 style="margin-top:0;">Quy tắc hoạt động</h3>
+    <ul style="margin:0;padding-left:18px;line-height:1.8;">
+      <li>Mỗi tài khoản có 1 ví điện tử riêng.</li>
+      <li>Chọn <b>Ví điện tử</b> khi đặt hàng để thanh toán ngay.</li>
+      <li>Nếu đơn bị huỷ hoặc bị từ chối, hệ thống tự động hoàn tiền về ví.</li>
+      <li>Admin có thể xem ví và giao dịch trong Django Admin.</li>
+    </ul>
+  </div>
+</div>
+
+<h3 style="margin:18px 0 10px;">Lịch sử giao dịch</h3>
+<div class="table-wrap">
+  <table class="tbl">
+    <tr style="background:#faf7ef;">
+      <th>Thời gian</th>
+      <th>Loại giao dịch</th>
+      <th>Số tiền</th>
+      <th>Ghi chú</th>
+    </tr>
+    {% for t in transactions %}
+    <tr>
+      <td>{{ t.created_at|date:"d/m/Y H:i" }}</td>
+      <td>{{ t.get_transaction_type_display }}</td>
+      <td>{{ t.amount|vnd }} VND</td>
+      <td>
+        {{ t.note|default:"-" }}
+        {% if t.order %}<div class="muted">Đơn hàng #{{ t.order.id }}</div>{% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4" class="muted" style="padding:14px;">Chưa có giao dịch nào.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}

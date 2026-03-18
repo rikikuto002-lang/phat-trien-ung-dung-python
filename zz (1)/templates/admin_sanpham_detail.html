@@ -1,0 +1,33 @@
+{% extends "admin_base.html" %}
+{% load static %}
+{% load tien %}
+{% block title %}Admin - Chi tiết sản phẩm{% endblock %}
+{% block admin_content %}
+<div class="card" style="padding:18px;">
+  <div class="row" style="justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;">
+    <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap;">
+      <div style="width:180px;height:180px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:#fff;display:flex;align-items:center;justify-content:center;">
+        {% if sp.anh %}
+          <img src="{{ sp.anh.url }}" alt="{{ sp.ten }}" style="width:100%;height:100%;object-fit:cover;">
+        {% else %}
+          <img src="{% static 'banner.png' %}" alt="{{ sp.ten }}" style="width:100%;height:100%;object-fit:cover;">
+        {% endif %}
+      </div>
+      <div>
+        <h2 style="margin:0 0 8px;">{{ sp.ten }}</h2>
+        <p><b>ID:</b> {{ sp.id }}</p>
+        <p><b>Giá:</b> {{ sp.gia|vnd }} VND</p>
+        <p><b>Loại:</b> {{ sp.get_loai_display }}</p>
+        <p><b>Trạng thái:</b> <span class="status status-{{ sp.trang_thai|lower }}">{{ sp.get_trang_thai_display }}</span></p>
+        <p><b>Số đơn liên quan:</b> {{ sp.don_hangs.count }}</p>
+      </div>
+    </div>
+
+    <div class="row" style="gap:10px;flex-wrap:wrap;">
+      <a class="btn" href="{% url 'admin_sanpham_list' %}">Quay lại</a>
+      <a class="btn primary" href="{% url 'admin_sanpham_edit' sp.id %}">Sửa</a>
+      <a class="btn danger" href="{% url 'admin_sanpham_delete' sp.id %}">Xoá</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

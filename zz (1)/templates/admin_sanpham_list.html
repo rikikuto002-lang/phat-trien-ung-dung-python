@@ -1,0 +1,76 @@
+{% extends "admin_base.html" %}
+{% load static %}
+{% load tien %}
+{% block title %}Admin - Sản phẩm{% endblock %}
+{% block admin_content %}
+  <div class="card" style="padding:18px;">
+    <div class="row" style="justify-content:space-between;gap:10px;flex-wrap:wrap;">
+      <h2 style="margin:0;">Sản phẩm</h2>
+      <a class="btn primary" href="{% url 'admin_sanpham_create' %}">+ Thêm</a>
+    </div>
+
+    <form method="get" class="filter-bar" style="margin-top:12px;">
+      <input class="input" name="q" value="{{ q }}" placeholder="Tìm theo tên...">
+      <select class="input" name="trang_thai">
+        <option value="">-- Tất cả trạng thái --</option>
+        {% for value, label in trang_thai_choices %}
+          <option value="{{ value }}" {% if trang_thai == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      <select class="input" name="loai">
+        <option value="">-- Tất cả loại --</option>
+        {% for value, label in loai_choices %}
+          <option value="{{ value }}" {% if loai == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      <select class="input" name="sort">
+        {% for value, label in sort_choices %}
+          <option value="{{ value }}" {% if sort == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      <button class="btn" type="submit">Lọc</button>
+      <a class="btn" href="{% url 'admin_sanpham_list' %}">Reset</a>
+    </form>
+
+    <div class="table-wrap" style="margin-top:12px;">
+      <table class="tbl">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Ảnh</th>
+            <th>Tên</th>
+            <th>Giá</th>
+            <th>Loại</th>
+            <th>Trạng thái</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for sp in ds %}
+          <tr>
+            <td>{{ sp.id }}</td>
+            <td>
+              {% if sp.anh %}
+                <img src="{{ sp.anh.url }}" alt="" style="width:56px;height:56px;object-fit:cover;border-radius:12px;border:1px solid var(--line);">
+              {% else %}
+                <img src="{% static 'banner.png' %}" alt="" style="width:56px;height:56px;object-fit:cover;border-radius:12px;border:1px solid var(--line);">
+              {% endif %}
+            </td>
+            <td style="min-width:260px;">{{ sp.ten }}</td>
+            <td><b>{{ sp.gia|vnd }}</b> VND</td>
+            <td>{{ sp.get_loai_display }}</td>
+            <td><span class="status status-{{ sp.trang_thai|lower }}">{{ sp.get_trang_thai_display }}</span></td>
+            <td style="white-space:nowrap;">
+              <a class="btn" href="{% url 'admin_sanpham_detail' sp.id %}">Xem</a>
+              <a class="btn" href="{% url 'admin_sanpham_edit' sp.id %}">Sửa</a>
+              <a class="btn danger" href="{% url 'admin_sanpham_delete' sp.id %}">Xoá</a>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="7" class="muted">Không có sản phẩm.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

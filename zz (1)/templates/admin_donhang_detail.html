@@ -1,0 +1,37 @@
+{% extends "admin_base.html" %}
+{% load tien %}
+{% block title %}Admin - Chi tiết đơn hàng{% endblock %}
+{% block admin_content %}
+<div class="card" style="padding:18px;">
+  <div class="row" style="justify-content:space-between;gap:16px;flex-wrap:wrap;">
+    <div>
+      <h2 style="margin:0 0 8px;">Đơn hàng #{{ don.id }}</h2>
+      <p><b>Khách:</b> {{ don.nguoi_dat.username }}</p>
+      <p><b>Sản phẩm:</b> {{ don.san_pham.ten }}</p>
+      <p><b>Số lượng:</b> {{ don.so_luong }}</p>
+      <p><b>Tổng tiền:</b> {{ don.tong_tien|vnd }} VND</p>
+      <p><b>Thanh toán:</b> {{ don.get_phuong_thuc_tt_display }}</p>
+      <p><b>Người nhận:</b> {{ don.ho_ten }} • {{ don.sdt }}</p>
+      <p><b>Địa chỉ:</b> {{ don.dia_chi }}</p>
+      {% if don.ghi_chu %}<p><b>Ghi chú:</b> {{ don.ghi_chu }}</p>{% endif %}
+      <p><b>Trạng thái:</b> <span class="status status-{{ don.trang_thai|lower }}">{{ don.get_trang_thai_display }}</span></p>
+      <p><b>Tạo lúc:</b> {{ don.tao_luc }}</p>
+      <p><b>Trạng thái hợp lệ tiếp theo:</b>
+        {% if allowed_statuses %}
+          {% for code, label in allowed_statuses %}
+            <span class="status status-{{ code|lower }}">{{ label }}</span>
+          {% endfor %}
+        {% else %}
+          <span class="muted">Không còn bước tiếp theo.</span>
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="row" style="gap:10px;flex-wrap:wrap;align-items:flex-start;">
+      <a class="btn" href="{% url 'admin_donhang_list' %}">Quay lại</a>
+      <a class="btn primary" href="{% url 'admin_donhang_edit' don.id %}">Sửa</a>
+      <a class="btn danger" href="{% url 'admin_donhang_delete' don.id %}">Xoá</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

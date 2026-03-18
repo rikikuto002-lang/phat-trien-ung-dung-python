@@ -1,0 +1,85 @@
+{% extends "admin_base.html" %}
+{% load tien %}
+{% block title %}Admin - Đơn hàng{% endblock %}
+{% block admin_content %}
+  <div class="card" style="padding:18px;">
+    <div class="row" style="justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
+      <h2 style="margin:0;">Đơn hàng</h2>
+      <a class="btn primary" href="{% url 'admin_donhang_create' %}">+ Thêm đơn</a>
+    </div>
+
+    <form method="get" class="filter-bar" style="margin-top:12px;">
+      <input class="input" name="q" value="{{ q }}" placeholder="Tìm: user / họ tên / SĐT / sản phẩm / địa chỉ" />
+      <select class="input" name="trang_thai">
+        <option value="">-- Tất cả trạng thái --</option>
+        {% for k,v in trang_thai_choices %}
+          <option value="{{ k }}" {% if trang_thai == k %}selected{% endif %}>{{ v }}</option>
+        {% endfor %}
+      </select>
+      <select class="input" name="payment">
+        <option value="">-- Tất cả thanh toán --</option>
+        {% for k,v in payment_choices %}
+          <option value="{{ k }}" {% if payment == k %}selected{% endif %}>{{ v }}</option>
+        {% endfor %}
+      </select>
+      <select class="input" name="sort">
+        {% for value, label in sort_choices %}
+          <option value="{{ value }}" {% if sort == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      <button class="btn primary" type="submit">Lọc</button>
+      <a class="btn" href="{% url 'admin_donhang_list' %}">Reset</a>
+    </form>
+  </div>
+
+  <div class="card" style="padding:0;margin-top:14px;overflow:auto;">
+    <table class="tbl" style="min-width:1220px;">
+      <tr style="background:#faf7ef;">
+        <th>ID</th>
+        <th>Khách</th>
+        <th>Sản phẩm</th>
+        <th>SL</th>
+        <th>Tổng</th>
+        <th>Giao hàng</th>
+        <th>Trạng thái</th>
+        <th>Cập nhật nhanh</th>
+        <th></th>
+      </tr>
+      {% for d in ds %}
+      <tr>
+        <td>#{{ d.id }}</td>
+        <td>{{ d.nguoi_dat.username }}</td>
+        <td>{{ d.san_pham.ten }}</td>
+        <td>{{ d.so_luong }}</td>
+        <td><b>{{ d.tong_tien|vnd }}</b> VND</td>
+        <td>
+          <div><b>{{ d.ho_ten }}</b> • {{ d.sdt }}</div>
+          <div class="muted">{{ d.dia_chi }}</div>
+          {% if d.ghi_chu %}<div class="muted">Ghi chú: {{ d.ghi_chu }}</div>{% endif %}
+          <div class="muted">TT: {{ d.get_phuong_thuc_tt_display }}</div>
+          <div class="muted" style="font-size:12px;">{{ d.tao_luc }}</div>
+        </td>
+        <td><span class="status status-{{ d.trang_thai|lower }}">{{ d.get_trang_thai_display }}</span></td>
+        <td>
+          <form method="post" action="{% url 'admin_donhang_update' d.id %}" class="row" style="gap:8px;align-items:center;">
+            {% csrf_token %}
+            <select class="input" name="trang_thai" style="max-width:210px;">
+              {% for k,v in trang_thai_choices %}
+                <option value="{{ k }}" {% if d.trang_thai == k %}selected{% endif %}>{{ v }}</option>
+              {% endfor %}
+            </select>
+            <button class="btn" type="submit">Lưu</button>
+          </form>
+        </td>
+        <td style="white-space:nowrap;">
+          <a class="btn" href="{% url 'admin_donhang_detail' d.id %}">Xem</a>
+          <a class="btn" href="{% url 'admin_donhang_edit' d.id %}">Sửa</a>
+          <a class="btn danger" href="{% url 'admin_donhang_delete' d.id %}">Xoá</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="9" style="padding:12px;color:#666;">Không có đơn nào.</td></tr>
+      {% endfor %}
+    </table>
+  </div>
+{% endblock %}

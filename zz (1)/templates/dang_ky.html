@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Đăng ký - Phụ kiện điện thoại{% endblock %}
+{% block content %}
+<h2 style="font-family:'Cormorant Garamond',serif;margin:18px 0 10px;">Đăng ký</h2>
+{% if loi %}<div class="err">{{ loi }}</div>{% endif %}
+<form method="post" class="formbox">
+  {% csrf_token %}
+  <p>Tên đăng nhập:<br><input class="input" name="username" placeholder="Ví dụ: minh123"></p>
+  <p>Email (tuỳ chọn):<br><input class="input" name="email" placeholder="name@example.com"></p>
+  <p>Mật khẩu:<br><input class="input" name="password" type="password" placeholder="******"></p>
+  <p>Nhập lại mật khẩu:<br><input class="input" name="password2" type="password" placeholder="******"></p>
+  <button class="btn primary" type="submit">Tạo tài khoản</button>
+  <a class="btn" href="{% url 'dang_nhap' %}">Đã có tài khoản?</a>
+</form>
+{% endblock %}

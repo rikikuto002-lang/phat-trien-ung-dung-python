@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load tien %}
+{% block title %}Đơn hàng - Phụ kiện điện thoại{% endblock %}
+{% block content %}
+<h2 style="font-family:'Cormorant Garamond',serif;margin:18px 0 10px;">Đơn hàng của tôi</h2>
+
+<form method="get" class="filter-bar" style="margin-bottom:14px;">
+  <input class="input" name="q" value="{{ q }}" placeholder="Tìm phụ kiện / họ tên / SĐT / địa chỉ">
+  <select class="input" name="trang_thai">
+    <option value="">-- Tất cả trạng thái --</option>
+    {% for k,v in trang_thai_choices %}
+      <option value="{{ k }}" {% if trang_thai == k %}selected{% endif %}>{{ v }}</option>
+    {% endfor %}
+  </select>
+  <select class="input" name="sort">
+    {% for value, label in sort_choices %}
+      <option value="{{ value }}" {% if sort == value %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <button class="btn" type="submit">Lọc</button>
+  <a class="btn" href="{% url 'ds_don' %}">Reset</a>
+</form>
+
+<div class="table-wrap">
+  <table class="tbl">
+    <tr style="background:#faf7ef;">
+      <th>ID</th>
+      <th>Sản phẩm</th>
+      <th>SL</th>
+      <th>Tổng</th>
+      <th>Giao hàng</th>
+      <th>Thanh toán</th>
+      <th>Trạng thái</th>
+      <th>Thao tác</th>
+    </tr>
+    {% for d in ds %}
+    <tr>
+      <td>#{{ d.id }}</td>
+      <td>{{ d.san_pham.ten }}</td>
+      <td>{{ d.so_luong }}</td>
+      <td>{{ d.tong_tien|vnd }} VND</td>
+      <td>
+        <div><b>{{ d.ho_ten }}</b> • {{ d.sdt }}</div>
+        <div class="muted">{{ d.dia_chi }}</div>
+        {% if d.ghi_chu %}<div class="muted">Ghi chú: {{ d.ghi_chu }}</div>{% endif %}
+        <div class="muted">TT: {{ d.get_phuong_thuc_tt_display }}</div>
+      </td>
+      <td>
+        <div>{{ d.get_phuong_thuc_tt_display }}</div>
+        {% if d.phuong_thuc_tt == "ViDienTu" and d.da_hoan_tien %}<div class="muted">Đã hoàn tiền</div>{% endif %}
+      </td>
+      <td><span class="status status-{{ d.trang_thai|lower }}">{{ d.get_trang_thai_display }}</span></td>
+      <td>
+        {% if d.trang_thai == "Pending" %}
+          <a class="btn primary" href="{% url 'xac_nhan_don' d.id %}">Xác nhận</a>
+          <a class="btn" href="{% url 'huy_don' d.id %}">Huỷ</a>
+        {% elif d.trang_thai == "Confirmed" %}
+          <a class="btn" href="{% url 'huy_don' d.id %}">Huỷ</a>
+        {% else %}
+          -
+        {% endif %}
+      </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="8" class="muted" style="padding:14px;">Chưa có đơn hàng nào.</td></tr>
+    {% endfor %}
+  </table>
+</div>
+{% endblock %}
