@@ -1,0 +1,12 @@
+1.1.1. Lý do chọn Python và Framework Django 
+Trong bối cảnh phát triển web hiện nay, việc lựa chọn công cụ phù hợp quyết định 50% sự thành công của dự án. Nhóm/Tôi lựa chọn ngôn ngữ Python kết hợp với framework Django vì các lý do chiến lược sau:
+•	Tốc độ phát triển (Rapid Development): Django hoạt động theo triết lý "The web framework for perfectionists with deadlines". Nó cung cấp sẵn các tính năng như hệ thống quản trị (Admin Panel), xác thực người dùng (Auth), và kết nối CSDL (ORM), giúp tập trung tối đa vào logic nghiệp vụ của cửa hàng phụ kiện.
+•	Hệ sinh thái thư viện phong phú: Python sở hữu các thư viện mạnh mẽ cho việc xử lý hình ảnh sản phẩm (Pillow), vẽ biểu đồ thống kê (Plotly, Matplotlib) và bảo mật dữ liệu.
+•	Bảo mật mặc định: Django giúp ngăn chặn các lỗ hổng phổ biến như SQL Injection, Cross-site Scripting (XSS) và Cross-site Request Forgery (CSRF) ngay từ cấu hình gốc, đáp ứng yêu cầu về bảo mật mật khẩu và dữ liệu người dùng của đề bài.
+•	Khả năng mở rộng: Với kiến trúc MVT (Model-View-Template), hệ thống dễ dàng bảo trì và nâng cấp các tính năng mới trong tương lai như tích hợp AI gợi ý sản phẩm hoặc thanh toán trực tuyến.
+1.1.2. Mục tiêu dự án 
+Dự án được thực hiện nhằm đạt được các mục tiêu cụ thể:
+1.	Về kỹ thuật: Xây dựng một website hoàn chỉnh, chạy ổn định trên môi trường thực tế, đáp ứng đầy đủ các tiêu chuẩn về mã nguồn (MVC/Layered Architecture) và kiểm thử.
+2.	Về nghiệp vụ: Giải quyết trọn vẹn quy trình mua bán phụ kiện điện thoại: từ khâu quản lý kho hàng, duyệt đơn hàng đến báo cáo doanh thu.
+3.	Về trải nghiệm: Cung cấp giao diện trực quan, thân thiện (Responsive) và hệ thống thông báo (Toast/Alert) rõ ràng cho người dùng.
+
