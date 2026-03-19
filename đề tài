@@ -1,0 +1,20 @@
+Xây dựng website bán phụ kiện điện thoại sử dụng ngôn ngữ lập trình Python
+
+1) Mục tiêu & phạm vi
+- Mục tiêu: Xây dựng ứng dụng web hoàn chỉnh phục vụ một bài toán nghiệp vụ cụ thể, có cơ sở dữ liệu, giao diện người dùng, chức năng xử lý, và triển khai chạy thực tế.
+- Phạm vi tối thiểu: Quản lý ít nhất 5 thực thể dữ liệu có quan hệ (ví dụ: Người dùng, Sản phẩm/Bài viết, Đơn hàng/Bình luận).
+- Kết quả mong đợi: Hệ thống chạy ổn định, có tài liệu, có dữ liệu mẫu, minh họa được quy trình nghiệp vụ đầu–cuối.
+2) Vai trò người dùng
+- Khách (Guest): Đăng ký, đăng nhập, xem nội dung công khai, tìm kiếm.
+- Người dùng đã đăng nhập: Thực hiện chức năng nghiệp vụ (tạo/sửa/xóa đối tượng dữ liệu thuộc quyền), cập nhật hồ sơ.
+- Quản trị (Admin): Quản lý người dùng, phân quyền, cấu hình danh mục, xem báo cáo/thống kê.
+3) Yêu cầu chức năng
+Tối thiểu 6 chức năng động, trong đó:
+a) Xác thực & phân quyền: Đăng ký, đăng nhập, quên mật khẩu, kiểm soát truy cập theo vai trò.
+b) Thực hiện đầy đủ các chức năng Thêm – Xem – Sửa – Xóa (CRUD) cho ít nhất 2 bảng dữ liệu chính của website (ví dụ: người dùng, sản phẩm, bài viết...). Có thêm chức năng tìm kiếm, lọc và sắp xếp dữ liệu để người dùng dễ tra cứu thông tin.
+c) Nghiệp vụ đặc thù (ít nhất 2 luồng): ví dụ đặt hàng/đặt chỗ/nộp bài/duyệt bài, kèm trạng thái (pending/approved/rejected).
+d) Thống kê – báo cáo: Ít nhất 2 biểu đồ hoặc bảng tổng hợp (theo ngày/tháng/loại).
+e) Tải lên tệp/ảnh và xử lý an toàn (giới hạn kích thước/định dạng).
+5) Kiến trúc & công nghệ
+- Ngôn ngữ/Framework gợi ý: Python (Django/FastAPI/Flask + Jinja/HTMX hoặc REST + frontend).
+- CSDL: PostgreSQL/MySQL/SQLite.
